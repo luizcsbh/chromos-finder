@@ -25,8 +25,9 @@ class ComparacaoService
         $score = 0.0;
 
         // 3. Levenshtein (Peso 40%)
-        // Distância máxima 2 = 40%, Distância 1 = 20%?
-        // Vamos usar uma fórmula proporcional baseada no tamanho da string.
+        // Mede a distância de edição entre duas strings, contando quantas operações
+        // de inserção, remoção ou substituição são necessárias para transformar uma na outra.
+        // Quanto menor a distância, maior a similaridade entre os nomes.
         $maxLength = max(mb_strlen($nome1Normalizado), mb_strlen($nome2Normalizado));
         $levenshteinDist = levenshtein($nome1Normalizado, $nome2Normalizado);
         
@@ -39,16 +40,22 @@ class ComparacaoService
         $score += ($levenshteinScore * 0.40);
 
         // 4. Similaridade - similar_text (Peso 30%)
+        // Compara os caracteres em comum entre as duas strings e calcula a porcentagem
+        // de similaridade com base na sobreposição de conteúdo.
         $simPercent = 0.0;
         similar_text($nome1Normalizado, $nome2Normalizado, $simPercent);
         $score += ($simPercent * 0.30);
 
         // 5. Jaro Winkler (Peso 20%)
+        // Avalia a similaridade entre nomes considerando prefixos comuns e posições relativas
+        // dos caracteres, sendo útil para detectar variações pequenas e trocas de letras.
         $jaroWinklerScore = JaroWinkler::compare($nome1Normalizado, $nome2Normalizado) * 100;
         $score += ($jaroWinklerScore * 0.20);
 
         // 6. Soundex (Peso 10%)
-        // Como o Soundex nativo do PHP é focado no inglês, vamos calcular a similaridade entre os códigos Soundex
+        // Gera um código fonético para representar o som do nome, ajudando a identificar
+        // semelhanças mesmo quando a grafia muda. Como o Soundex nativo do PHP é focado no inglês,
+        // aqui usamos o código para comparar a fonética de forma aproximada.
         $soundex1 = soundex($nome1Normalizado);
         $soundex2 = soundex($nome2Normalizado);
         $soundexScore = ($soundex1 === $soundex2) ? 100.0 : 0.0;

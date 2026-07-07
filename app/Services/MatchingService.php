@@ -17,15 +17,22 @@ class MatchingService
 
     public function processarAprovado(Aprovado $aprovado)
     {
-        // Estratégia: buscar candidatos que tenham o mesmo primeiro nome OU o mesmo último sobrenome
-        // para não comparar com a base inteira.
+        // Estratégia de filtragem: buscamos apenas alunos que compartilham o mesmo
+        // primeiro nome ou o mesmo último sobrenome do aprovado.
+        // Essa decisão reduz drasticamente o número de comparações e evita custo O(n²).
+        // O objetivo é manter desempenho alto sem perder a capacidade de encontrar matches válidos.
         $candidatos = Aluno::where('hash_primeiro_nome', $aprovado->hash_primeiro_nome)
             ->orWhere('hash_ultimo_sobrenome', $aprovado->hash_ultimo_sobrenome)
             ->get();
 
+        // Inicializamos o melhor score com zero para garantir que qualquer candidato
+        // com semelhança positiva seja considerado.
         $melhorScore = 0;
         $melhorCandidato = null;
 
+        // Avaliamos cada candidato potencial e escolhemos aquele com maior score.
+        // Essa decisão é importante porque cada aprovado pode ter mais de um nome parecido,
+        // e queremos preservar a correspondência mais plausível.
         foreach ($candidatos as $aluno) {
             $score = $this->comparacaoService->calcularScore(
                 $aprovado->nome_normalizado,
@@ -40,6 +47,9 @@ class MatchingService
             }
         }
 
+        // A classificação do resultado foi definida para priorizar a segurança.
+        // Pontuações muito altas geram match automático, enquanto valores intermediários
+        // são enviados para revisão manual para evitar falsos positivos.
         if ($melhorScore >= 99) {
             $status = 'MATCH_EXATO';
             $confianca = 'ALTA';
@@ -53,11 +63,16 @@ class MatchingService
             $status = 'AMBIGUO';
             $confianca = 'BAIXA';
         } else {
+            // Abaixo de 80, a correspondência é tratada como insuficiente e não é considerada válida.
+            // Essa decisão reforça a política de não confirmar automaticamente nomes duvidosos.
             $status = 'SEM_CORRESPONDENCIA';
             $confianca = 'NULA';
             $melhorCandidato = null;
         }
 
+        // Salva o resultado do matching para auditoria.
+        // A justificativa simples registra o melhor score encontrado, mas a decisão final
+        // de aceitar, revisar ou descartar fica explícita no status e na confiança atribuída.
         StudentMatch::create([
             'aluno_id' => $melhorCandidato ? $melhorCandidato->id : null,
             'aprovado_id' => $aprovado->id,
