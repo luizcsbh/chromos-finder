@@ -24,7 +24,7 @@ class ComparacaoService
 
         $score = 0.0;
 
-        // 3. Levenshtein (Peso 40%)
+        // 3. Levenshtein* (Peso 40%)
         // Mede a distância de edição entre duas strings, contando quantas operações
         // de inserção, remoção ou substituição são necessárias para transformar uma na outra.
         // Quanto menor a distância, maior a similaridade entre os nomes.
@@ -46,7 +46,7 @@ class ComparacaoService
         similar_text($nome1Normalizado, $nome2Normalizado, $simPercent);
         $score += ($simPercent * 0.30);
 
-        // 5. Jaro Winkler (Peso 20%)
+        // 5. Jaro-Winkler* (Peso 20%)
         // Avalia a similaridade entre nomes considerando prefixos comuns e posições relativas
         // dos caracteres, sendo útil para detectar variações pequenas e trocas de letras.
         $jaroWinklerScore = JaroWinkler::compare($nome1Normalizado, $nome2Normalizado) * 100;

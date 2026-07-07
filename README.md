@@ -49,7 +49,15 @@ Os percentuais resultam em um grau de correspondência:
 - De **80% a 89%**: `AMBIGUO`. Nomes que batem em alguns pontos fortes, mas levantam red flags do Jaro-Winkler.
 Qualquer pontuação ambígua ou manual deve ser avaliada e clicada na interface humana do Dashboard.
 
-### 4. Interface Web
+### 4. Algoritmos Utilizados na Comparação de Nomes
+Foram incorporados algoritmos clássicos de similaridade para melhorar a detecção de nomes parecidos sem comprometer a segurança do processo.
+
+- **Levenshtein**: mede a distância entre duas strings contando quantas operações de inserção, remoção ou substituição são necessárias para transformar uma na outra. Ele foi usado para capturar pequenas variações de grafia, como erros de digitação, letras trocadas ou elementos ausentes.
+- **Jaro-Winkler**: é um algoritmo de similaridade especialmente útil para nomes curtos e variações pequenas, pois valoriza prefixos comuns e a posição relativa dos caracteres. Ele foi empregado para reconhecer nomes com pequenas diferenças ortográficas sem aceitar correspondências frágeis demais.
+
+Esses dois algoritmos foram escolhidos porque complementam a normalização textual: enquanto o Levenshtein foca na edição estrutural da string, o Jaro-Winkler reforça a semelhança entre nomes que compartilham prefixos e estrutura semelhante.
+
+### 5. Interface Web
 Construída como Single-View SPA com abas utilizando **Bootstrap 5** e uma funcionalidade nativa Javascript em **DOM Vanilla** para reordenar tabelas e colunas, além de geração limpa em _streams_ de um arquivo `CSV`.
 
 ---
