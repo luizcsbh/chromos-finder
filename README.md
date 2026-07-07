@@ -65,7 +65,31 @@ npm run build
 
 2. Configure o ambiente (.env) e as tabelas SQLite:
 ```bash
-cp .env.example .env
+- crie a base de dados dentro do projeto
+touch database/database.sqlite
+````
+crie .env na raiz do projeto
+```bash
+APP_NAME="Chromos Finder"
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://127.0.0.1:8000
+
+APP_MAINTENANCE_DRIVER=file
+
+BCRYPT_ROUNDS=12
+
+DB_CONNECTION=sqlite
+DB_DATABASE=/caminho do caminho da base de dados/database.sqlite
+
+BROADCAST_CONNECTION=log
+FILESYSTEM_DISK=local
+QUEUE_CONNECTION=sync
+
+CACHE_STORE=array
+```
+```bash
 php artisan key:generate
 touch database/database.sqlite
 php artisan migrate
