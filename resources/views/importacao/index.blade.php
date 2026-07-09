@@ -3,6 +3,10 @@
 @section('content')
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Importação de Arquivos</h1>
+    <form action="{{ route('importacao.limpar') }}" method="POST" onsubmit="return confirm('Deseja realmente limpar todos os dados importados e os arquivos armazenados?');">
+        @csrf
+        <button type="submit" class="btn btn-outline-danger">Limpar banco e arquivos</button>
+    </form>
 </div>
 
 <div class="row">

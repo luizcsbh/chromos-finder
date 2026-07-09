@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Importacao;
-use App\Services\ImportacaoService;
 use App\Jobs\ExecutarComparacoesJob;
+use App\Models\Aluno;
+use App\Models\Aprovado;
+use App\Models\Importacao;
+use App\Models\StudentMatch;
+use App\Services\ImportacaoService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ImportacaoController extends Controller
 {
@@ -57,5 +62,22 @@ class ImportacaoController extends Controller
         ExecutarComparacoesJob::dispatch($importacao);
 
         return back()->with('success', 'Lista de aprovados importada. Comparações em andamento.');
+    }
+
+    public function limpar()
+    {
+        DB::transaction(function () {
+            StudentMatch::query()->delete();
+            Aprovado::query()->delete();
+            Aluno::query()->delete();
+            Importacao::query()->delete();
+        });
+
+        $files = Storage::disk('local')->allFiles('importacoes');
+        foreach ($files as $file) {
+            Storage::disk('local')->delete($file);
+        }
+
+        return back()->with('success', 'Banco de dados e arquivos importados foram limpos com sucesso.');
     }
 }

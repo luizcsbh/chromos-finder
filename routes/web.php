@@ -11,6 +11,7 @@ Route::get('/exportar/exatos', [DashboardController::class, 'exportarExatos'])->
 Route::get('/importar', [ImportacaoController::class, 'index'])->name('importacao.index');
 Route::post('/importar/base', [ImportacaoController::class, 'importarBase'])->name('importacao.base');
 Route::post('/importar/aprovados', [ImportacaoController::class, 'importarAprovados'])->name('importacao.aprovados');
+Route::post('/importar/limpar', [ImportacaoController::class, 'limpar'])->name('importacao.limpar');
 
 Route::get('/revisao', [RevisaoController::class, 'index'])->name('revisao.index');
 Route::post('/revisao/{match}/confirmar', [RevisaoController::class, 'confirmar'])->name('revisao.confirmar');

@@ -95,7 +95,7 @@
                                     <td>{{ $match->aprovado->nome }}</td>
                                     <td>{{ $match->aprovado->instituicao }}</td>
                                     <td>{{ $match->aluno->nome_completo ?? '' }}</td>
-                                    <td><span class="badge bg-success">{{ $match->score }}</span></td>
+                                    <td><span class="badge bg-success">{{ $match->score }}%</span></td>
                                 </tr>
                                 @empty
                                 <tr><td colspan="6" class="text-center">Nenhum registro.</td></tr>
@@ -123,7 +123,7 @@
                                     <td>{{ $match->aprovado->nome }}</td>
                                     <td>{{ $match->aprovado->instituicao }}</td>
                                     <td>{{ $match->aluno->nome_completo ?? '' }}</td>
-                                    <td><span class="badge bg-info">{{ $match->score }}</span></td>
+                                    <td><span class="badge bg-info">{{ $match->score }}%</span></td>
                                 </tr>
                                 @empty
                                 <tr><td colspan="5" class="text-center">Nenhum registro.</td></tr>
@@ -151,7 +151,7 @@
                                     <td>{{ $match->aprovado->nome }}</td>
                                     <td>{{ $match->aprovado->instituicao }}</td>
                                     <td>{{ $match->aluno->nome_completo ?? 'N/A' }}</td>
-                                    <td><span class="badge bg-warning text-dark">{{ $match->score }}</span></td>
+                                    <td><span class="badge bg-warning text-dark">{{ $match->score }}%</span></td>
                                 </tr>
                                 @empty
                                 <tr><td colspan="5" class="text-center">Nenhum registro.</td></tr>
